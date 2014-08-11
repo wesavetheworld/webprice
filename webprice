@@ -1,0 +1,192 @@
+#!/bin/bash
+
+####################################################################################################
+#                                                                                                  #
+# author: max hebditch                                                                             #
+# date:140811                                                                                      #
+#                                                                                                  #
+#                                   ONLINE PRICE SCRAPER                                           #
+#                                   ====================                                           #
+#                                                                                                  #
+#  Shell script to scrape pcpartpicker, ebay or amazon urls to check the latest total cost.        #
+#  It can also take in a budget price and can tell you whether the price is above or below your    #
+#  budget.                                                                                         #
+#                                                                                                  #
+#  Script can be run alone using hard coded values like so                                         #
+#                                                                                                  #
+#     $ webprice                                                                                   #
+#                                                                                                  #
+#  It can also be run with an URL to check quickly                                                 #
+#                                                                                                  #
+#     $ webprice http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK                               #
+#                                                                                                  #
+#  or can give price compared to hard coded  budget difference with a -b flag.                     #
+#                                                                                                  #
+#     $ webprice -b                                                                                #
+#                                                                                                  #
+#  Or a budget can be provide inline                                                               #
+#                                                                                                  #
+#     $ webprice -b 600 http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK                        #
+#                                                                                                  #
+#  Using a -l flag                                                                                 #
+#                                                                                                  #
+#     $ webprice -l                                                                                #
+#                                                                                                  #
+#  the result will be logged in a csv file in the following directory                              #
+#                                                                                                  #
+#     ~/scratch/logs/                                                                              #
+#                                                                                                  #
+#  If the directory doesn't exist the script will tell you. Directory can be changed easily.       #
+#  The file name is dependent on the product name in the URL.                                      #
+#                                                                                                  #
+#  To log only with no terminal feedback the quiet flag, -q, can be used with the log flag -l      #
+#                                                                                                  #
+#     $ webprice -ql                                                                               #
+#                                                                                                  #
+#  This would be the best option for setting up a cron job                                         #
+#                                                                                                  #
+#  Todo                                                                                            #
+#  ----                                                                                            #
+#  1) Make it a more generic website scraping tool DONE                                            #
+#  2) Offer multiple websites/urls                                                                 #
+#  3) Graph price changes with time                                                                #
+#  4) Add option to email with price change                                                        #
+#  5) Ability for two flags: i.e. -qh for quiet and budget set values DONE                         #
+#                                                                                                  #
+####################################################################################################
+
+# Hardcoded budget and URL
+budget="500"
+URL="http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK"
+
+# regex to decide if numeric
+check='^[0-9]+([.][0-9]+)?$'
+
+# For one arguement
+if [[ $# == "1" ]]; then
+        if ! [[ $1 =~ $check ]]; then
+                if [[ "$1" == *.co* ]]; then
+                        URL="$1"
+                else
+                        mode="$1"
+                fi
+        else
+                budget="$1"
+        fi
+fi
+
+# For two arguements
+if [[ $# == "2" ]]; then
+        if ! [[ $1 =~ $check ]]; then
+                if [[ "$1" == *.co* ]]; then
+                        URL="$1"
+                else
+                        mode="$1"
+                fi
+        else
+                budget="$1"
+        fi
+        if ! [[ $2 =~ $check ]]; then
+                if [[ "$2" == *.co* ]]; then
+                        URL="$2"
+                else
+                        mode="$2"
+                fi
+        else
+                budget="$2"
+        fi
+fi
+
+# For three arguements
+if [[ $# == "3" ]]; then
+        if ! [[ $1 =~ $check ]]; then
+                if [[ "$1" == *.co* ]]; then
+                        URL="$1"
+                else
+                        mode="$1"
+                fi
+        else
+                budget="$1"
+        fi
+        if ! [[ $2 =~ $check ]]; then
+                if [[ "$2" == *.co* ]]; then
+                        URL="$2"
+                else
+                        mode="$2"
+                fi
+        else
+                budget="$2"
+        fi
+        if ! [[ $3 =~ $check ]]; then
+                if [[ "$3" == *.co* ]]; then
+                        URL="$3"
+                else
+                        mode="$3"
+                fi
+        else
+                budget="$3"
+        fi
+fi
+
+# Test what shop from URL
+# Also will set web to specific information for each product so csv is named properly
+if [[ "$URL" == *amazon* ]]; then
+        shop=$(curl -s $URL | grep "actualPriceContent" | cut -c 84- | sed -e 's/<\/b><\/span>//g')
+        web=$(echo $URL | sed 's/http:\/\///g' | cut -c 18- | sed -e 's/\/.*//g')
+elif [[ "$URL" == *ebay* ]]; then
+        shop=$(curl -s $URL | grep -m 1 "prcIsum_bidPrice" | cut -c 72- | sed 's/<.*//g')
+        web=$(echo $URL | sed 's/^[^itm]*//g' | cut -c 5- | sed 's/\/.*//g')
+elif [[ "$URL" == *pcpartpicker* ]]; then
+        shop=$(curl -s $URL | grep -A 1 'Total' | grep '£' | cut -c 106-111)
+        pclist=$(echo $URL | tail -c7)
+        web=$(echo "pcpartpicker-$pclist")
+else
+        printf "Sorry, that URL is not supported yet\n"
+fi
+
+# If script is run on its own then just use hard coded values
+if [[ $# == "0" ]]; then
+        printf "Current price of $URL is £$shop\n"
+fi
+
+# Compare budget to scraped price
+difference=$(echo "$budget - $shop" | bc -l)
+difference2=$(echo "$shop - $budget" | bc -l)
+
+# quiet mode so don't print to terminal
+if ! [[ "$mode" =~ [q] ]]; then
+        printf "Current price is £$shop\n"
+        if [[ "$mode" == *b* ]]; then
+                if (( $(echo "$shop < $budget" | bc -l) )); then
+                        printf "Good news, it is cheaper than £$budget by £$difference\n"
+                else   
+                        printf "Unfortunately it is still £$difference2 over budget\n"
+                fi
+        fi
+fi
+
+# exit if not on log mode
+if [[ "$mode" == *l* ]]; then
+        #checks if log directory and file exists, if it doesn't then it makes the headers first
+        if [ -d ~/scratch/logs/ ]; then
+                if [ -f ~/scratch/logs/"$web".csv ]; then
+                        if [[ "$mode" == *b* ]]; then
+                                echo "$(date +"%F"),$shop,$budget,$difference2" >> ~/scratch/logs/"$web".csv
+                        else
+                                echo "$(date +"%F"),$shop" >> ~/scratch/logs/"$web".csv
+                        fi
+                else
+                        if [[ "$mode" == *b* ]]; then
+                                echo "Date, Online price, Desired price, Difference" > ~/scratch/logs/"$web".csv
+                                echo "$(date +"%F"),$shop,$budget,$difference2" >> ~/scratch/logs/"$web".csv
+                        else
+                                echo "Date, Online price" > ~/scratch/logs/"$web".csv
+                                echo "$(date +"%F"),$shop" >> ~/scratch/logs/"$web".csv
+                        fi
+                fi
+        else
+                printf "You need to make the log folder ~/scratch/logs to log details, or use the -s flag\n"
+        fi
+else
+        exit
+fi
