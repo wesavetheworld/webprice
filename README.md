@@ -4,7 +4,9 @@ webprice
 Shell script to scrape pcpartpicker, ebay or amazon urls to check the latest cost. It can also take in a budget price and can tell you whether the price is above or below your    
 budget. Highly dependent on the websites not changing the html.                                                                                        
 
-I originally wrote it for PC partpicker, just waiting for my saved part list to fall below budget. So at the moment in only works on saved builds, will look into adding option for individual parts. I decided to make it more generic to cover some of the big websites. If anyone has any suggestions for others to add I'd be happy to do it, assuming they are reasonably popular. Otherwise you can just fork it.
+I originally wrote it for PC partpicker, just waiting for my saved part list to fall below budget. It works on both saved builds and individual parts. I decided to make it more generic to cover some of the big websites. If anyone has any suggestions for others to add I'd be happy to do it, assuming they are reasonably popular. Otherwise you can just fork it.
+
+You could quite easily pipe the output from this into some sort of notification for when a build or part falls below a certain price.
 
 Script can be run alone using hard coded values like so                                         
                                                                                                 
