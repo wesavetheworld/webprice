@@ -37,6 +37,8 @@ To log only with no terminal feedback the quiet flag, -q, can be used with the l
     $ webprice -ql                                                                               
                                                                                                 
 This would be the best option for setting up a cron job                                         
+
+Currency is also hard coded but can be changed in the variable $currency
                                                                                                 
 ##Todo                                                                                            
 
