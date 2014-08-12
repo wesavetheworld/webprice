@@ -67,7 +67,7 @@ check='^[0-9]+([.][0-9]+)?$'
 # For one arguement
 if [[ $# == "1" ]]; then
         if ! [[ $1 =~ $check ]]; then
-                if [[ "$1" == *www.* ]] || [[ "$1" == *http.* ]]; then
+                if [[ "$1" == *www.* ]] || [[ "$1" == http* ]] || [[ "$1" == *http* ]]; then
                         longurl="$1"
                         URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
@@ -81,7 +81,7 @@ fi
 # For two arguements
 if [[ $# == "2" ]]; then
         if ! [[ $1 =~ $check ]]; then
-                if [[ "$1" == *www.* ]] || [[ "$1" == *http.* ]]; then
+                if [[ "$1" == *www.* ]] || [[ "$1" == http.* ]] || [[ "$1" == *http* ]]; then
                         longurl="$1"
                         URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
@@ -91,7 +91,7 @@ if [[ $# == "2" ]]; then
                 budget="$1"
         fi
         if ! [[ $2 =~ $check ]]; then
-                if [[ "$2" == *www.* ]] || [[ "$2" == *http.* ]]; then
+                if [[ "$2" == *www.* ]] || [[ "$2" == http.* ]] || [[ "$2" == *http* ]]; then
                         longurl="$2"
                         URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
@@ -105,7 +105,7 @@ fi
 # For three arguements
 if [[ $# == "3" ]]; then
         if ! [[ $1 =~ $check ]]; then
-                if [[ "$1" == *www.* ]] || [[ "$1" == *http.* ]]; then
+                if [[ "$1" == *www.* ]] || [[ "$1" == http.* ]] || [[ "$1" == *http* ]]; then
                         longurl="$1"
                         URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
@@ -115,7 +115,7 @@ if [[ $# == "3" ]]; then
                 budget="$1"
         fi
         if ! [[ $2 =~ $check ]]; then
-                if [[ "$2" == *www.* ]] || [[ "$2" == *http.* ]]; then
+                if [[ "$2" == *www.* ]] || [[ "$2" == http.* ]] || [[ "$2" == *http* ]]; then
                         longurl="$2"
                         URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
@@ -125,7 +125,7 @@ if [[ $# == "3" ]]; then
                 budget="$2"
         fi
         if ! [[ $3 =~ $check ]]; then
-                if [[ "$3" == *www.* ]] || [[ "$3" == *http.* ]]; then
+                if [[ "$3" == *www.* ]] || [[ "$3" == http.* ]] || [[ "$3" == *http* ]]; then
                         longurl="$3"
                         URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
