@@ -13,6 +13,8 @@ It can also be run with an URL to check quickly
                                                                                                 
     $ webprice http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK                               
                                                                                                 
+This link has to not have the ?ref part of the URL
+
 or can give price compared to hard coded  budget difference with a -b flag.                     
                                                                                                 
     $ webprice -b                                                                                
