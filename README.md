@@ -66,3 +66,4 @@ Currency is also hard coded but can be changed in the variable `$currency`.
 6. Variable for currency DONE
 7. Variable for save location DONE
 8. Robust URL parsing DONE
+9. pcpartpicker parts DONE
