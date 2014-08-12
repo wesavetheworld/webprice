@@ -4,7 +4,7 @@ webprice
 Shell script to scrape pcpartpicker, ebay or amazon urls to check the latest total cost. It can also take in a budget price and can tell you whether the price is above or below your    
 budget.                                                                                         
 
-I originally wrote it for PC partpicker, just waiting for my saved part list to fall below budget. I decided to make this more generic to cover some of the big websites. If anyone has any suggestions for other to add I'd be happy to do it if they are reasonably popular. Otherwise you can just fork it.
+I originally wrote it for PC partpicker, just waiting for my saved part list to fall below budget. I decided to make it more generic to cover some of the big websites. If anyone has any suggestions for others to add I'd be happy to do it, assuming they are reasonably popular. Otherwise you can just fork it.
 
 Script can be run alone using hard coded values like so                                         
                                                                                                 
@@ -12,7 +12,7 @@ Script can be run alone using hard coded values like so
                                                                                                 
 It can also be run with an URL to check quickly                                                 
                                                                                                 
-    $ webprice http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK                               
+    $ webprice http://uk.pcpartpicker.com/user/maxhebditch/saved/yxgFf7  
                                                                                                 
 This only works if the link doesn't have the `ref` or `?ref` part of the URL and no trailing `/`
 Otherwise need to put it in quotes to avoid stuff like `&` interfering and causing a `parse error`.
