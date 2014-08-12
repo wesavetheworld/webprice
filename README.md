@@ -15,7 +15,7 @@ It can also be run with an URL to check quickly
     $ webprice http://uk.pcpartpicker.com/user/maxhebditch/saved/yxgFf7  
                                                                                                 
 This only works if the link doesn't have the `ref` or `?ref` part of the URL and no trailing `/`
-Otherwise need to put it in quotes to avoid stuff like `&` interfering and causing a `parse error`.
+Otherwise need to put it in quotes `"URL"` to avoid stuff like `&` interfering and causing a `parse error`. This is probably best practise for websites with ugly URLs compared to pcpartpicker.
 
     $ webprice "http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK/ref=sr_1_1?s=music&ie=UTF8&qid=1407847596&sr=1-1&keywords=untrue+burial" 
 
@@ -49,9 +49,10 @@ This would be the best option for setting up a cron job
 Currency is also hard coded but can be changed in the variable $currency
                                                                                                 
 ##Todo                                                                                            
-
-1) Make it a more generic website scraping tool DONE                                            
-2) Offer multiple websites/urls                                                                 
-3) Graph price changes with time                                                                
-4) Add option to email with price change                                                        
-5) Ability for two flags: i.e. -qh for quiet and budget set values DONE                         
+3. Graph price changes with time                                                                
+4. Add option to email/notify with price change                                                        
+1. Make it a more generic website scraping tool DONE                                            
+5. Ability for two flags: i.e. -bl for quiet and budget set values DONE                         
+6. Variable for currency DONE
+7. Variable for save location DONE
+8. Robust URL parsing DONE
