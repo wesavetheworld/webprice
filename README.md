@@ -29,6 +29,8 @@ the result will be logged in a csv file in the following directory
                                                                                                 
     ~/scratch/logs/                                                                              
                                                                                                 
+Which can be changed using the $loglocation variable
+    
 If the directory doesn't exist the script will tell you. Directory can be changed easily.       
 The file name is dependent on the product name in the URL.                                      
                                                                                                 

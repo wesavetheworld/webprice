@@ -59,6 +59,7 @@
 budget="500"
 URL="http://uk.pcpartpicker.com/user/maxhebditch/saved/yxgFf7"
 currency="£"
+loglocation='/home/max/scratch/logs'
 
 # regex to decide if numeric
 check='^[0-9]+([.][0-9]+)?$'
@@ -170,24 +171,24 @@ fi
 # exit if not on log mode
 if [[ "$mode" == *l* ]]; then
         #checks if log directory and file exists, if it doesn't then it makes the headers first
-        if [ -d ~/scratch/logs/ ]; then
-                if [ -f ~/scratch/logs/"$web".csv ]; then
+        if [[ -d "$loglocation" ]]; then
+                if [ -f "$loglocation"/"$web".csv ]; then
                         if [[ "$mode" == *b* ]]; then
-                                echo "$(date +"%F"),$shop,$budget,$difference2" >> ~/scratch/logs/"$web".csv
+                                echo "$(date +"%F"),$shop,$budget,$difference2" >> "$loglocation"/"$web".csv
                         else
-                                echo "$(date +"%F"),$shop" >> ~/scratch/logs/"$web".csv
+                                echo "$(date +"%F"),$shop" >> "$loglocation"/"$web".csv
                         fi
                 else
                         if [[ "$mode" == *b* ]]; then
-                                echo "Date, Online price, Desired price, Difference" > ~/scratch/logs/"$web".csv
-                                echo "$(date +"%F"),$shop,$budget,$difference2" >> ~/scratch/logs/"$web".csv
+                                echo "Date, Online price, Desired price, Difference" > "$loglocation"/"$web".csv
+                                echo "$(date +"%F"),$shop,$budget,$difference2" >> "$loglocation"/"$web".csv
                         else
-                                echo "Date, Online price" > ~/scratch/logs/"$web".csv
-                                echo "$(date +"%F"),$shop" >> ~/scratch/logs/"$web".csv
+                                echo "Date, Online price" > "$loglocation"/"$web".csv
+                                echo "$(date +"%F"),$shop" >> "$loglocation"/"$web".csv
                         fi
                 fi
         else
-                printf "You need to make the log folder ~/scratch/logs to log details, or use the -s flag\n"
+                printf "You need to make the log folder ~/scratch/logs to log details\n"
         fi
 else
         exit
