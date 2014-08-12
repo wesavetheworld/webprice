@@ -128,15 +128,18 @@ if [[ "$URL" == *amazon* ]]; then
         shop=$(curl -s $cleanurl | iconv -f utf-8 -c | grep "actualPriceContent" | sed 's/^.*priceLarge">//' | sed 's/<\/b><\/span>//') 
         web=$(echo $URL | sed 's/http:\/\///g' | sed 's/^\/ref*//g' | cut -c 18- | sed -e 's/\/.*//g')
 elif [[ "$URL" == *ebay* ]]; then
-        shop=$(curl -s $URL | iconv -f utf-8 -c | grep -m1 "prcIsum_bidPrice" | sed 's/^.*price">//' | sed 's/<\/span>//' | tr -d $'\r' | sed -e s/"$currency"// )
+        cleanurl=${URL%/}
+        shop=$(curl -s $cleanurl | iconv -f utf-8 -c | grep -m1 "prcIsum_bidPrice" | sed 's/^.*price">//' | sed 's/<\/span>//' | tr -d $'\r' | sed -e s/"$currency"// )
         web=$(echo $URL | sed 's/http:\/\///g' | sed 's/^[^itm]*//g' | cut -c 5- | sed 's/\/.*//g')
 elif [[ "$URL" == *pcpartpicker.com/user* ]]; then
-        shop=$(curl -s $URL | grep -A 1 'Total' | grep "$currency" | cut -c 106-111)
-        pclist=$(echo $URL | tail -c7)
+        cleanurl=${URL%/}
+        shop=$(curl -s $cleanurl | grep -A 1 'Total' | grep "$currency" | cut -c 106-111)
+        pclist=$(echo $cleanurl | tail -c7)
         web=$(echo "pcpartpicker-$pclist")
 elif [[ "$URL" == *pcpartpicker.com/part* ]]; then
-        shop=$(curl -s $URL | iconv -f utf-8 | grep -m1 -A 2 'spr_nopromo' | grep "$currency" | sed 's/^.*£//' | sed 's/<\/a><\/td>//')
-        pclist=$(echo $URL | sed 's/^.*part\///')
+        cleanurl=${URL%/}
+        shop=$(curl -s $cleanurl | iconv -f utf-8 | grep -m1 -A 2 'spr_nopromo' | grep "$currency" | sed 's/^.*£//' | sed 's/<\/a><\/td>//')
+        pclist=$(echo $cleanurl | sed 's/^.*part\///')
         web=$(echo "pcpartpicker-$pclist")
 else
         printf "Sorry, that URL is not supported yet\n"

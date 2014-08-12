@@ -16,8 +16,7 @@ It can also be run with an URL to check quickly
                                                                                                 
     $ webprice http://uk.pcpartpicker.com/user/maxhebditch/saved/yxgFf7  
                                                                                                 
-This only works if the link doesn't have the `ref` or `?ref` part of the URL and no trailing `/`
-Otherwise need to put it in quotes `"URL"` to avoid stuff like `&` interfering and causing a `parse error`. This is probably best practise for websites with ugly URLs compared to pcpartpicker.
+This only works if the link is quite short, otherwise need to put it in quotes `"URL"` to avoid stuff like `&` interfering and causing a `parse error`. This is probably best practise for websites with ugly URLs compared to pcpartpicker.
 
     $ webprice "http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK/ref=sr_1_1?s=music&ie=UTF8&qid=1407847596&sr=1-1&keywords=untrue+burial" 
 
