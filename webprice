@@ -146,7 +146,7 @@ fi
 
 # If script is run on its own then just use hard coded values
 if [[ $# == "0" ]]; then
-        printf "Current price of $URL is £$shop\n"
+        printf "Current price of $web is £$shop\n"
         exit
 fi
 
@@ -156,12 +156,12 @@ difference2=$(echo "$shop - $budget" | bc -l)
 
 # quiet mode so don't print to terminal
 if ! [[ "$mode" =~ [q] ]]; then
-        printf "Current price is £$shop\n"
+        printf "Current price of $web is £$shop\n"
         if [[ "$mode" == *b* ]]; then
                 if (( $(echo "$shop < $budget" | bc -l) )); then
-                        printf "Good news, it is cheaper than £$budget by £$difference\n"
+                        printf "Good news, $web is cheaper than £$budget by £$difference\n"
                 else   
-                        printf "Unfortunately it is still £$difference2 over budget\n"
+                        printf "Unfortunately $web is still £$difference2 over budget\n"
                 fi
         fi
 fi
