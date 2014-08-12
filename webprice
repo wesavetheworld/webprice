@@ -124,7 +124,7 @@ fi
 # Test what shop from URL
 # Also will set web to specific information for each product so csv is named properly
 if [[ "$URL" == *amazon* ]]; then
-        shop=$(curl -s $URL | grep "actualPriceContent" | cut -c 84- | sed -e 's/<\/b><\/span>//g')
+        shop=$(curl -s $URL | iconv -f utf-8 -c | grep "actualPriceContent" | sed 's/^.*priceLarge">//' | sed 's/<\/b><\/span>//') 
         web=$(echo $URL | sed 's/http:\/\///g' | sed 's/^\/ref*//g' | cut -c 18- | sed -e 's/\/.*//g')
 elif [[ "$URL" == *ebay* ]]; then
         shop=$(curl -s $URL | grep -m 1 "prcIsum_bidPrice" | cut -c 72- | sed 's/<.*//g')
