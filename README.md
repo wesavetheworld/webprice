@@ -19,11 +19,11 @@ Otherwise need to put it in quotes `"URL"` to avoid stuff like `&` interfering a
 
     $ webprice "http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK/ref=sr_1_1?s=music&ie=UTF8&qid=1407847596&sr=1-1&keywords=untrue+burial" 
 
-or can give price compared to hard coded  budget difference with a `-b` flag.                     
+or can give price compared to hard coded budget `$budget` difference with a `-b` flag.                     
                                                                                                 
     $ webprice -b                                                                                
                                                                                                 
-Or a budget can be provide inline                                                               
+Or a budget can be provide inline to over rule default budget.                                                        
                                                                                                 
     $ webprice -b 600 http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK                        
     
@@ -43,14 +43,18 @@ Which can be changed using the `$loglocation` variable
     
 If the directory doesn't exist the script will tell you. Directory can be changed easily.       
 The file name is dependent on the product name in the URL.                                      
+
+The `-l` flag can be combined with the `-b` flag to log the price against your budget
+
+    $ webprice -lb 500 "http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK/ref=sr_1_1?s=music&ie=UTF8&qid=1407847596&sr=1-1&keywords=untrue+burial"  
                                                                                                 
 To log only with no terminal feedback the quiet flag, `-q`, can be used with the log flag `-l`      
                                                                                                 
-    $ webprice -ql                                                                               
-                                                                                                
+    $ webprice -ql
+                                                     
 This would be the best option for setting up a cron job                                         
 
-Currency is also hard coded but can be changed in the variable $currency
+Currency is also hard coded but can be changed in the variable `$currency`.
                                                                                                 
 ##Todo                                                                                            
 3. Graph price changes with time                                                                
