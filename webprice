@@ -67,8 +67,9 @@ check='^[0-9]+([.][0-9]+)?$'
 # For one arguement
 if [[ $# == "1" ]]; then
         if ! [[ $1 =~ $check ]]; then
-                if [[ "$1" == *.co* ]]; then
-                        URL="$1"
+                if [[ "$1" == *www.* ]] || [[ "$1" == *http.* ]]; then
+                        longurl="$1"
+                        URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
                         mode="$1"
                 fi
@@ -81,7 +82,8 @@ fi
 if [[ $# == "2" ]]; then
         if ! [[ $1 =~ $check ]]; then
                 if [[ "$1" == *www.* ]] || [[ "$1" == *http.* ]]; then
-                        URL="$1"
+                        longurl="$1"
+                        URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
                         mode="$1"
                 fi
@@ -90,7 +92,8 @@ if [[ $# == "2" ]]; then
         fi
         if ! [[ $2 =~ $check ]]; then
                 if [[ "$2" == *www.* ]] || [[ "$2" == *http.* ]]; then
-                        URL="$2"
+                        longurl="$2"
+                        URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
                         mode="$2"
                 fi
@@ -103,7 +106,8 @@ fi
 if [[ $# == "3" ]]; then
         if ! [[ $1 =~ $check ]]; then
                 if [[ "$1" == *www.* ]] || [[ "$1" == *http.* ]]; then
-                        URL="$1"
+                        longurl="$1"
+                        URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
                         mode="$1"
                 fi
@@ -112,7 +116,8 @@ if [[ $# == "3" ]]; then
         fi
         if ! [[ $2 =~ $check ]]; then
                 if [[ "$2" == *www.* ]] || [[ "$2" == *http.* ]]; then
-                        URL="$2"
+                        longurl="$2"
+                        URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
                         mode="$2"
                 fi
@@ -121,7 +126,8 @@ if [[ $# == "3" ]]; then
         fi
         if ! [[ $3 =~ $check ]]; then
                 if [[ "$3" == *www.* ]] || [[ "$3" == *http.* ]]; then
-                        URL="$3"
+                        longurl="$3"
+                        URL=$(echo $longurl | sed 's/?.*//g' | sed 's/\/ref=.*//' )
                 else
                         mode="$3"
                 fi
@@ -134,10 +140,10 @@ fi
 # Also will set web to specific information for each product so csv is named properly
 if [[ "$URL" == *amazon* ]]; then
         shop=$(curl -s $URL | grep "actualPriceContent" | cut -c 84- | sed -e 's/<\/b><\/span>//g')
-        web=$(echo $URL | sed 's/http:\/\///g' | cut -c 18- | sed -e 's/\/.*//g')
+        web=$(echo $URL | sed 's/http:\/\///g' | sed 's/^\/ref*//g' | cut -c 18- | sed -e 's/\/.*//g')
 elif [[ "$URL" == *ebay* ]]; then
         shop=$(curl -s $URL | grep -m 1 "prcIsum_bidPrice" | cut -c 72- | sed 's/<.*//g')
-        web=$(echo $URL | sed 's/^[^itm]*//g' | cut -c 5- | sed 's/\/.*//g')
+        web=$(echo $URL | sed 's/http:\/\///g' | sed 's/^[^itm]*//g' | cut -c 5- | sed 's/\/.*//g')
 elif [[ "$URL" == *pcpartpicker* ]]; then
         shop=$(curl -s $URL | grep -A 1 'Total' | grep '£' | cut -c 106-111)
         pclist=$(echo $URL | tail -c7)
