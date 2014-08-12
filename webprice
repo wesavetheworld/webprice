@@ -127,7 +127,7 @@ if [[ "$URL" == *amazon* ]]; then
         shop=$(curl -s $URL | iconv -f utf-8 -c | grep "actualPriceContent" | sed 's/^.*priceLarge">//' | sed 's/<\/b><\/span>//') 
         web=$(echo $URL | sed 's/http:\/\///g' | sed 's/^\/ref*//g' | cut -c 18- | sed -e 's/\/.*//g')
 elif [[ "$URL" == *ebay* ]]; then
-        shop=$(curl -s $URL | grep -m 1 "prcIsum_bidPrice" | cut -c 72- | sed 's/<.*//g')
+        shop=$(curl -s $URL | iconv -f utf-8 -c | grep -m1 "prcIsum_bidPrice" | sed 's/^.*price">//' | sed 's/<\/span>//' | tr -d $'\r' | sed -e s/"$currency"// )
         web=$(echo $URL | sed 's/http:\/\///g' | sed 's/^[^itm]*//g' | cut -c 5- | sed 's/\/.*//g')
 elif [[ "$URL" == *pcpartpicker.com/user* ]]; then
         shop=$(curl -s $URL | grep -A 1 'Total' | grep "$currency" | cut -c 106-111)
