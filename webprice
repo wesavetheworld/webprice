@@ -80,7 +80,7 @@ fi
 # For two arguements
 if [[ $# == "2" ]]; then
         if ! [[ $1 =~ $check ]]; then
-                if [[ "$1" == *.co* ]]; then
+                if [[ "$1" == *www.* ]] || [[ "$1" == *http.* ]]; then
                         URL="$1"
                 else
                         mode="$1"
@@ -89,7 +89,7 @@ if [[ $# == "2" ]]; then
                 budget="$1"
         fi
         if ! [[ $2 =~ $check ]]; then
-                if [[ "$2" == *.co* ]]; then
+                if [[ "$2" == *www.* ]] || [[ "$2" == *http.* ]]; then
                         URL="$2"
                 else
                         mode="$2"
@@ -102,7 +102,7 @@ fi
 # For three arguements
 if [[ $# == "3" ]]; then
         if ! [[ $1 =~ $check ]]; then
-                if [[ "$1" == *.co* ]]; then
+                if [[ "$1" == *www.* ]] || [[ "$1" == *http.* ]]; then
                         URL="$1"
                 else
                         mode="$1"
@@ -111,7 +111,7 @@ if [[ $# == "3" ]]; then
                 budget="$1"
         fi
         if ! [[ $2 =~ $check ]]; then
-                if [[ "$2" == *.co* ]]; then
+                if [[ "$2" == *www.* ]] || [[ "$2" == *http.* ]]; then
                         URL="$2"
                 else
                         mode="$2"
@@ -120,7 +120,7 @@ if [[ $# == "3" ]]; then
                 budget="$2"
         fi
         if ! [[ $3 =~ $check ]]; then
-                if [[ "$3" == *.co* ]]; then
+                if [[ "$3" == *www.* ]] || [[ "$3" == *http.* ]]; then
                         URL="$3"
                 else
                         mode="$3"
