@@ -147,6 +147,7 @@ fi
 # If script is run on its own then just use hard coded values
 if [[ $# == "0" ]]; then
         printf "Current price of $URL is £$shop\n"
+        exit
 fi
 
 # Compare budget to scraped price
