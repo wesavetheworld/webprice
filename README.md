@@ -26,6 +26,10 @@ or can give price compared to hard coded  budget difference with a `-b` flag.
 Or a budget can be provide inline                                                               
                                                                                                 
     $ webprice -b 600 http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK                        
+    
+The flags can be mixed up too
+
+    $ webprice "http://www.amazon.co.uk/Untrue-Burial/dp/B000WTBMBK" 600 -b 
                                                                                                 
 Using a `-l` flag                                                                                 
                                                                                                 
