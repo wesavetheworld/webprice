@@ -45,6 +45,7 @@ budget="500"
 URL="http://uk.pcpartpicker.com/user/maxhebditch/saved/yxgFf7"
 currency="£"
 loglocation='/home/max/scratch/logs'
+tempfile='/home/max/scratch/logs/temp.html'
 
 # regex to decide if numeric
 check='^[0-9]+([.][0-9]+)?$'
@@ -133,22 +134,19 @@ elif [[ "$URL" == *ebay* ]]; then
         web=$(echo $URL | sed 's/http:\/\///g' | sed 's/^[^itm]*//g' | cut -c 5- | sed 's/\/.*//g')
 elif [[ "$URL" == *pcpartpicker.com/user* ]]; then
         cleanurl=${URL%/}
-        partTotal=$(curl -s $cleanurl | grep -c "pricing")
+        curl -s $cleanurl > $tempfile
+        partTotal=$(cat $tempfile | grep -c "pricing")
         partNum=0
-        # while [ $partNum -lt $partTotal ];
-        # do 
-                # let partNum+=1
-                # part[$partNum]=$(curl -s $cleanurl | grep -m $partNum -A 2 "pricing" | grep "$currency" | sed 's/.*ank">//g' | sed 's/<\/a><\/td>//' | cut -c 3- )
-        # done
-        # for (( i=1; i < "$partTotal"; i++ ));
-        # do
-                # echo "hi";
-        # done
-        # curl -s $cleanurl | grep pricing | while read -r line ; do
-                # echo "hello"
-        # done
-        #fix this cut
-        shop=$(curl -s $cleanurl | grep -A 1 "Total" | grep "$currency" | cut -c 106-111)
+        while [ $partNum -lt $partTotal ];
+        do 
+                let partNum+=1
+                part[$partNum]=$(cat $tempfile | grep -m $partNum -A 2 "pricing" | grep "$currency" | sed 's/.*ank">//g' | sed 's/<\/a><\/td>//' | cut -c 3- )
+        done
+        for (( i=1; i < "$partTotal"; i++ ));
+        do
+                echo "hi";
+        done
+        shop=$(cat $tempfile | grep -A 1 "Total" | grep "$currency" | cut -c 106-111)
         pclist=$(echo $cleanurl | tail -c7)
         web=$(echo "pcpartpicker-$pclist")
 elif [[ "$URL" == *pcpartpicker.com/part* ]]; then
