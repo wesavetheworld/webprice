@@ -45,6 +45,7 @@ budget="500"
 URL="http://uk.pcpartpicker.com/user/maxhebditch/saved/yxgFf7"
 currency="£"
 loglocation='/home/max/scratch/logs'
+tempfile='/home/max/scratch/logs/temp.html'
 
 # regex to decide if numeric
 check='^[0-9]+([.][0-9]+)?$'
@@ -133,9 +134,28 @@ elif [[ "$URL" == *ebay* ]]; then
         web=$(echo $URL | sed 's/http:\/\///g' | sed 's/^[^itm]*//g' | cut -c 5- | sed 's/\/.*//g')
 elif [[ "$URL" == *pcpartpicker.com/user* ]]; then
         cleanurl=${URL%/}
-        shop=$(curl -s $cleanurl | grep -A 1 'Total' | grep "$currency" | cut -c 106-111)
+        curl -s $cleanurl > $tempfile
+        partTotal=$(cat $tempfile | grep -c "pricing")
+        partNum=0
+        while [ $partNum -lt $partTotal ];
+        do 
+                let partNum+=1
+                partcost[$partNum]=$(cat $tempfile | grep -m $partNum -A 2 "pricing" | grep "$currency" | sed 's/.*ank">//g' | sed 's/<\/a><\/td>//' | cut -c 3- )
+                partcosts="partcost[$partNum]"
+                partName[$partNum]=$(cat $tempfile | grep -m $partNum -A 2 "pricing" | grep "href" | sed 's/.*mr\/*\///g' | sed 's/" rel=.*//g')
+                partNames="partName[$partNum]"
+        done
+        for (( i=1; i <= "$partTotal"; i++ ))
+        do
+                pname="$(echo "${!partNames}" | head -n $i | tail -n 1 )"
+                pcost="$(echo "${!partcosts}" | head -n $i | tail -n 1 )"
+                printf "%-80s %-100s \n" $pname $pcost
+        done
+        printf "\n"
+        shop=$(cat $tempfile | grep -A 1 "Total" | grep "$currency" | cut -c 106-111)
         pclist=$(echo $cleanurl | tail -c7)
         web=$(echo "pcpartpicker-$pclist")
+        rm $tempfile
 elif [[ "$URL" == *pcpartpicker.com/part* ]]; then
         cleanurl=${URL%/}
         shop=$(curl -s $cleanurl | iconv -f utf-8 | grep -m1 -A 2 'spr_nopromo' | grep "$currency" | sed 's/^.*£//' | sed 's/<\/a><\/td>//')
@@ -175,12 +195,29 @@ if [[ "$mode" == *l* ]]; then
                         if [[ "$mode" == *b* ]]; then
                                 echo "$(date +"%F"),$shop,$budget,$difference2" >> "$loglocation"/"$web".csv
                         else
-                                echo "$(date +"%F"),$shop" >> "$loglocation"/"$web".csv
+                                if [[ "$URL" == *pcpartpicker.com/user* ]]; then
+                                        echo -e "\n" >> "$loglocation"/"$web".csv
+                                        for (( i=1; i <= "$partTotal"; i++ ))
+                                        do
+                                                pname="$(echo "${!partNames}" | head -n $i | tail -n 1 )"
+                                                pcost="$(echo "${!partcosts}" | head -n $i | tail -n 1 )"
+                                                echo "$pname, $pcost" >> "$loglocation"/"$web".csv
+                                        done
+                                else
+                                        echo "$(date +"%F"),$shop" >> "$loglocation"/"$web".csv
+                                fi
                         fi
                 else
                         if [[ "$mode" == *b* ]]; then
                                 echo "Date, Online price, Desired price, Difference" > "$loglocation"/"$web".csv
                                 echo "$(date +"%F"),$shop,$budget,$difference2" >> "$loglocation"/"$web".csv
+                        elif [[ "$URL" == *pcpartpicker.com/user* ]]; then
+                                for (( i=1; i <= "$partTotal"; i++ ))
+                                do
+                                        pname="$(echo "${!partNames}" | head -n $i | tail -n 1 )"
+                                        pcost="$(echo "${!partcosts}" | head -n $i | tail -n 1 )"
+                                        echo "$pname, $pcost" >> "$loglocation"/"$web".csv
+                                done
                         else
                                 echo "Date, Online price" > "$loglocation"/"$web".csv
                                 echo "$(date +"%F"),$shop" >> "$loglocation"/"$web".csv
