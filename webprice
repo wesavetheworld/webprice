@@ -135,21 +135,23 @@ elif [[ "$URL" == *ebay* ]]; then
 elif [[ "$URL" == *pcpartpicker.com/user* ]]; then
         cleanurl=${URL%/}
         curl -s $cleanurl > $tempfile
-        partTotal=$(cat $tempfile | grep -c "pricing")
+        partTotal=$(cat $tempfile | grep -c "text-align:right;font-weight:bold")
         partNum=0
         while [ $partNum -lt $partTotal ];
         do 
                 let partNum+=1
-                partcost[$partNum]=$(cat $tempfile | grep -m $partNum -A 2 "pricing" | grep "$currency" | sed 's/.*ank">//g' | sed 's/<\/a><\/td>//' | cut -c 3- )
+                partcost[$partNum]=$(cat $tempfile | grep -m $partNum "text-align:right;font-weight:bold" | sed 's/.*ank">//g' | sed 's|</a></td>||g' | cut -c 3-)
                 partcosts="partcost[$partNum]"
-                partName[$partNum]=$(cat $tempfile | grep -m $partNum -A 2 "pricing" | grep "href" | sed 's/.*mr\/*\///g' | sed 's/" rel=.*//g')
+                partName[$partNum]=$(cat $tempfile | grep -m $partNum "text-align:right;font-weight:bold" | sed 's|.*<a href="||g' | sed 's|".*||g')
                 partNames="partName[$partNum]"
         done
-        for (( i=1; i <= "$partTotal"; i++ ))
+        let pstuff=0
+        while [ $pstuff -le $partTotal ]; 
         do
-                pname="$(echo "${!partNames}" | head -n $i | tail -n 1 )"
-                pcost="$(echo "${!partcosts}" | head -n $i | tail -n 1 )"
+                pname="$(echo "${!partNames}" | head -n $pstuff | tail -n 1 )"
+                pcost="$(echo "${!partcosts}" | head -n $pstuff | tail -n 1 )"
                 printf "%-80s %-100s \n" $pname $pcost
+                let pstuff+=1
         done
         printf "\n"
         shop=$(cat $tempfile | grep -A 1 "Total" | grep "$currency" | cut -c 106-111)
@@ -167,7 +169,7 @@ fi
 
 # If script is run on its own then just use hard coded values
 if [[ $# == "0" ]]; then
-        printf "Current price of $web is $currency$shop\n"
+        echo -e "Current price of $web is $currency$shop\n"
         exit
 fi
 
@@ -175,9 +177,9 @@ fi
 difference=$(echo "$budget - $shop" | bc -l)
 difference2=$(echo "$shop - $budget" | bc -l)
 
-# quiet mode so don't print to terminal
-if ! [[ "$mode" =~ [q] ]]; then
-        printf "Current price of $web is $currency$shop\n"
+# if not quiet mode and not logging
+if ! [[ "$mode" =~ *q* ]]; then
+        echo -e "Current price of $web is $currency$shop\n"
         if [[ "$mode" == *b* ]]; then
                 if (( $(echo "$shop < $budget" | bc -l) )); then
                         printf "Good news, $web is cheaper than $currency$budget by $currency$difference\n"
@@ -197,6 +199,7 @@ if [[ "$mode" == *l* ]]; then
                         else
                                 if [[ "$URL" == *pcpartpicker.com/user* ]]; then
                                         echo -e "\n" >> "$loglocation"/"$web".csv
+                                        echo -e "DATE:$(date)" >> "$loglocation"/"$web".csv
                                         for (( i=1; i <= "$partTotal"; i++ ))
                                         do
                                                 pname="$(echo "${!partNames}" | head -n $i | tail -n 1 )"
@@ -208,16 +211,18 @@ if [[ "$mode" == *l* ]]; then
                                 fi
                         fi
                 else
+                        touch "$loglocation"/"$web".csv
+                        echo -e "DATE:$(date)" >> "$loglocation"/"$web".csv
                         if [[ "$mode" == *b* ]]; then
-                                echo "Date, Online price, Desired price, Difference" > "$loglocation"/"$web".csv
+                                echo "Date, Online price, Desired price, Difference" >> "$loglocation"/"$web".csv
                                 echo "$(date +"%F"),$shop,$budget,$difference2" >> "$loglocation"/"$web".csv
-                        elif [[ "$URL" == *pcpartpicker.com/user* ]]; then
-                                for (( i=1; i <= "$partTotal"; i++ ))
-                                do
-                                        pname="$(echo "${!partNames}" | head -n $i | tail -n 1 )"
-                                        pcost="$(echo "${!partcosts}" | head -n $i | tail -n 1 )"
-                                        echo "$pname, $pcost" >> "$loglocation"/"$web".csv
-                                done
+                        elif [[ "$URL" == *"pcpartpicker.com/user"* ]]; then
+                                for (( i=1; i <= "$partTotal"; i++ ));
+                                        do
+                                                pname="$(echo "${!partNames}" | head -n $i | tail -n 1 )"
+                                                pcost="$(echo "${!partcosts}" | head -n $i | tail -n 1 )"
+                                                echo "$pname, $pcost" >> "$loglocation"/"$web".csv
+                                        done
                         else
                                 echo "Date, Online price" > "$loglocation"/"$web".csv
                                 echo "$(date +"%F"),$shop" >> "$loglocation"/"$web".csv
