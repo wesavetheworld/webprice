@@ -45,7 +45,7 @@ budget="500"
 URL="http://uk.pcpartpicker.com/user/maxhebditch/saved/yxgFf7"
 currency="£"
 loglocation=$HOME/scratch/logs
-tempfile=$HOME/scratch/logs/temp.html
+tempfile=$HOME/.webpricetemp.html
 
 # regex to decide if numeric
 check='^[0-9]+([.][0-9]+)?$'
