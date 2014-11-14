@@ -1,6 +1,8 @@
 webprice
 ========
 
+Note: This script currently only works on pcpartpicker as amazon and ebay have updated their html. When I get round to it, I will update the search string. If you update it yourself, please submit a pull request.
+
 Please do not abuse this tool. It is designed for periodically checking websites for prices. Not for making constant requests.
 
 Shell script to scrape pcpartpicker, ebay or amazon urls to check the latest cost. It can also take in a budget price and can tell you whether the price is above or below your budget. Highly dependent on the websites not changing the html.
