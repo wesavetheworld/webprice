@@ -1,7 +1,7 @@
 webprice
 ========
 
-Note: This script currently only works on pcpartpicker as amazon and ebay have updated their html. When I get round to it, I will update the search string. If you update it yourself, please submit a pull request.
+Note: This script currently only works on pcpartpicker as amazon and ebay have updated their html. When I get round to it, I will update the search string. If you update it yourself, please submit a pull request. This script is bound to be out of date if the last commit hasn't been quite recent due to the nature of the project.
 
 Please do not abuse this tool. It is designed for periodically checking websites for prices. Not for making constant requests.
 
@@ -14,6 +14,7 @@ You could quite easily pipe the output from this into some sort of notification 
 Script can be run alone using hard coded values like so 
                                                                                                 
     $ webprice                                                                                   
+
 It can also be run with an URL to check quickly
                                                                                                 
     $ webprice http://uk.pcpartpicker.com/user/maxhebditch/saved/yxgFf7  
